@@ -30,15 +30,23 @@ function isGood(c){
 function encodeString(single){
     var result = "";
     for(var i = 0; i < single.length; i++){
+        var current;
         if(isGood(single.charAt(i)))
-            result += single.charAt(i);
+            current = single.charAt(i);
         else
-            result += encodeChar(single.charCodeAt(i));
+            current = encodeChar(single.charCodeAt(i));
+
+        if(current.length == 2){
+            result += "%0" + current.substr(2);
+        }
+        else{
+            result += current;
+        }
     }
     return result;
 }
 
-function encode(data){
+exports.encode = function (data){
     if(typeof data === "string"){
         return encodeString(data);
     }
@@ -102,7 +110,7 @@ function decodeString(data){
         return data.charAt(0) + decode(data.substr(1));
     }
 }
-function decode(data){
+exports.decode = function(data){
     if(typeof data === "string"){
         if(data.indexOf("=") != -1) {
             var col = data.split("&");
@@ -123,5 +131,6 @@ function decode(data){
         }
     }
 }
-console.log(encode("სალომე"));
-console.log(decode("key=%e1%83%a1%e1%83%90%e1%83%9a%e1%83%9d%e1%83%9b%e1%83%94"));
+
+//console.log(encode("სალომე"));
+//console.log(decode("key=%e1%83%a1%e1%83%90%e1%83%9a%e1%83%9d%e1%83%9b%e1%83%94"));
